@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/entsql"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -32,7 +33,9 @@ func (Session) Fields() []ent.Field {
 			//	dialect.MySQL: "timestamp",
 			//}).
 			Annotations(&entsql.Annotation{
-				Default: "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+				DefaultExprs: map[string]string{
+					dialect.MySQL: "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
+				},
 			}).
 			Default(time.Now).
 			UpdateDefault(time.Now),

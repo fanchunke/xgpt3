@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"time"
 
+	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -164,8 +165,11 @@ func (sc *SessionCreate) check() error {
 	if _, ok := sc.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`chatent: missing required field "Session.created_at"`)}
 	}
-	if _, ok := sc.mutation.UpdatedAt(); !ok {
-		return &ValidationError{Name: "updated_at", err: errors.New(`chatent: missing required field "Session.updated_at"`)}
+	switch sc.driver.Dialect() {
+	case dialect.Postgres, dialect.SQLite:
+		if _, ok := sc.mutation.UpdatedAt(); !ok {
+			return &ValidationError{Name: "updated_at", err: errors.New(`chatent: missing required field "Session.updated_at"`)}
+		}
 	}
 	if _, ok := sc.mutation.DeletedAt(); !ok {
 		return &ValidationError{Name: "deleted_at", err: errors.New(`chatent: missing required field "Session.deleted_at"`)}
