@@ -31,6 +31,18 @@ func (c *ConversationHandler) CreateSession(ctx context.Context, userId string) 
 	return toConversationSession(result), nil
 }
 
+func (c *ConversationHandler) CloseSession(ctx context.Context, userId string) error {
+	_, err := c.client.Session.
+		Update().
+		Where(session.UserIDEQ(userId), session.StatusEQ(true)).
+		SetStatus(false).
+		Save(ctx)
+	if err != nil {
+		return fmt.Errorf("Close User %s Session failed: %w", userId, err)
+	}
+	return nil
+}
+
 func (c *ConversationHandler) GetLatestActiveSession(ctx context.Context, userId string) (*conversation.Session, error) {
 	result, err := c.client.Session.
 		Query().

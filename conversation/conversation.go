@@ -40,6 +40,8 @@ type Message struct {
 type Handler interface {
 	// 创建会话
 	CreateSession(ctx context.Context, userId string) (*Session, error)
+	// 关闭会话
+	CloseSession(ctx context.Context, userId string) error
 	// 获取最近一次开启的会话
 	GetLatestActiveSession(ctx context.Context, userId string) (*Session, error)
 	// 创建消息

@@ -163,3 +163,7 @@ func (c *Client) postCompletion(ctx context.Context, request gogpt.CompletionReq
 	}
 	return m, nil
 }
+
+func (c *Client) CloseConversation(ctx context.Context, userId string) error {
+	return c.ch.CloseSession(ctx, userId)
+}
