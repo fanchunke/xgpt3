@@ -56,7 +56,7 @@ var (
 		{Name: "user_id", Type: field.TypeString, Size: 50},
 		{Name: "status", Type: field.TypeBool, Default: false},
 		{Name: "created_at", Type: field.TypeTime, Default: "CURRENT_TIMESTAMP"},
-		{Name: "updated_at", Type: field.TypeTime, Default: map[string]schema.Expr{"mysql": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"}},
+		{Name: "updated_at", Type: field.TypeTime, Default: "CURRENT_TIMESTAMP", SchemaType: map[string]string{"mysql": "timestamp", "sqlite3": "timestamp"}},
 		{Name: "deleted_at", Type: field.TypeInt, Default: 0},
 	}
 	// SessionsTable holds the schema information for the "sessions" table.

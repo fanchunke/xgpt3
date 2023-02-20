@@ -29,13 +29,13 @@ func (Session) Fields() []ent.Field {
 			}).
 			Immutable(),
 		field.Time("updated_at").
-			//SchemaType(map[string]string{
-			//	dialect.MySQL: "timestamp",
-			//}).
-			Annotations(&entsql.Annotation{
-				DefaultExprs: map[string]string{
-					dialect.MySQL: "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
-				},
+			SchemaType(map[string]string{
+				dialect.MySQL:  "timestamp",
+				dialect.SQLite: "timestamp",
+			}).
+			Annotations(entsql.Annotation{
+				Default: "CURRENT_TIMESTAMP",
+				Options: "ON UPDATE CURRENT_TIMESTAMP",
 			}).
 			Default(time.Now).
 			UpdateDefault(time.Now),
