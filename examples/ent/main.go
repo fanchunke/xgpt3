@@ -8,7 +8,7 @@ import (
 	"github.com/fanchunke/xgpt3"
 	"github.com/fanchunke/xgpt3/conversation/ent"
 	"github.com/fanchunke/xgpt3/conversation/ent/chatent"
-	gogpt "github.com/sashabaranov/go-openai"
+	"github.com/sashabaranov/go-openai"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -28,15 +28,15 @@ func main() {
 	// conversation handler
 	handler := ent.New(entClient)
 
-	// gogpt client
-	gptClient := gogpt.NewClient("authToken")
+	// openai client
+	gptClient := openai.NewClient("authToken")
 
 	// xgpt3 client
 	xgpt3Client := xgpt3.NewClient(gptClient, handler)
 
 	// 请求
-	req := gogpt.CompletionRequest{
-		Model:           gogpt.GPT3TextDavinci003,
+	req := openai.CompletionRequest{
+		Model:           openai.GPT3TextDavinci003,
 		MaxTokens:       100,
 		Prompt:          "Lorem ipsum",
 		TopP:            1,
@@ -51,12 +51,12 @@ func main() {
 	fmt.Println(resp.Choices[0].Text)
 
 	// chat completion
-	chatReq := gogpt.ChatCompletionRequest{
-		Model: gogpt.GPT3Dot5Turbo,
+	chatReq := openai.ChatCompletionRequest{
+		Model: openai.GPT3Dot5Turbo,
 		TopP:  1,
-		Messages: []gogpt.ChatCompletionMessage{
+		Messages: []openai.ChatCompletionMessage{
 			{
-				Role:    gogpt.ChatMessageRoleUser,
+				Role:    openai.ChatMessageRoleUser,
 				Content: "Hello",
 			},
 		},
