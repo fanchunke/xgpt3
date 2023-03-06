@@ -1,6 +1,6 @@
 # xgpt3
 
-[go-gpt3]() API wrapper that supports conversation
+[go-openai](https://github.com/sashabaranov/go-openai) API wrapper that supports conversation
 
 ## Installation
 
@@ -21,7 +21,7 @@ import (
 	"github.com/fanchunke/xgpt3"
 	"github.com/fanchunke/xgpt3/conversation/ent"
 	"github.com/fanchunke/xgpt3/conversation/ent/chatent"
-	gogpt "github.com/sashabaranov/go-gpt3"
+	gogpt "github.com/sashabaranov/go-openai"
 
 	_ "github.com/go-sql-driver/mysql"
 )

@@ -8,7 +8,7 @@ import (
 	"github.com/fanchunke/xgpt3"
 	"github.com/fanchunke/xgpt3/conversation/ent"
 	"github.com/fanchunke/xgpt3/conversation/ent/chatent"
-	gogpt "github.com/sashabaranov/go-gpt3"
+	gogpt "github.com/sashabaranov/go-openai"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -49,4 +49,25 @@ func main() {
 		log.Fatalf("CreateConversationCompletion failed: %s", err)
 	}
 	fmt.Println(resp.Choices[0].Text)
+
+	// chat completion
+	chatReq := gogpt.ChatCompletionRequest{
+		Model: gogpt.GPT3Dot5Turbo,
+		TopP:  1,
+		Messages: []gogpt.ChatCompletionMessage{
+			{
+				Role:    gogpt.ChatMessageRoleUser,
+				Content: "Hello",
+			},
+		},
+		Temperature:     0.9,
+		PresencePenalty: 0.6,
+		User:            "fanchunke",
+	}
+
+	chatResp, err := xgpt3Client.CreateChatCompletion(context.Background(), chatReq)
+	if err != nil {
+		log.Fatalf("CreateChatCompletion failed: %s", err)
+	}
+	fmt.Println(chatResp.Choices[0].Message)
 }
