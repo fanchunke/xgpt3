@@ -8,7 +8,7 @@ import (
 	"github.com/fanchunke/xgpt3"
 	"github.com/fanchunke/xgpt3/conversation/ent"
 	"github.com/fanchunke/xgpt3/conversation/ent/chatent"
-	gogpt "github.com/sashabaranov/go-gpt3"
+	"github.com/sashabaranov/go-openai"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -28,15 +28,15 @@ func main() {
 	// conversation handler
 	handler := ent.New(entClient)
 
-	// gogpt client
-	gptClient := gogpt.NewClient("authToken")
+	// openai client
+	gptClient := openai.NewClient("authToken")
 
 	// xgpt3 client
 	xgpt3Client := xgpt3.NewClient(gptClient, handler)
 
 	// 请求
-	req := gogpt.CompletionRequest{
-		Model:           gogpt.GPT3TextDavinci003,
+	req := openai.CompletionRequest{
+		Model:           openai.GPT3TextDavinci003,
 		MaxTokens:       100,
 		Prompt:          "Lorem ipsum",
 		TopP:            1,
@@ -49,4 +49,25 @@ func main() {
 		log.Fatalf("CreateConversationCompletion failed: %s", err)
 	}
 	fmt.Println(resp.Choices[0].Text)
+
+	// chat completion
+	chatReq := openai.ChatCompletionRequest{
+		Model: openai.GPT3Dot5Turbo,
+		TopP:  1,
+		Messages: []openai.ChatCompletionMessage{
+			{
+				Role:    openai.ChatMessageRoleUser,
+				Content: "Hello",
+			},
+		},
+		Temperature:     0.9,
+		PresencePenalty: 0.6,
+		User:            "fanchunke",
+	}
+
+	chatResp, err := xgpt3Client.CreateChatCompletion(context.Background(), chatReq)
+	if err != nil {
+		log.Fatalf("CreateChatCompletion failed: %s", err)
+	}
+	fmt.Println(chatResp.Choices[0].Message)
 }

@@ -1,6 +1,6 @@
 # xgpt3
 
-[go-gpt3]() API wrapper that supports conversation
+[go-openai](https://github.com/sashabaranov/go-openai) API wrapper that supports conversation
 
 ## Installation
 
@@ -21,7 +21,7 @@ import (
 	"github.com/fanchunke/xgpt3"
 	"github.com/fanchunke/xgpt3/conversation/ent"
 	"github.com/fanchunke/xgpt3/conversation/ent/chatent"
-	gogpt "github.com/sashabaranov/go-gpt3"
+	"github.com/sashabaranov/go-openai"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -41,15 +41,15 @@ func main() {
 	// conversation handler
 	handler := ent.New(entClient)
 
-	// gogpt client
-	gptClient := gogpt.NewClient("authToken")
+	// openai client
+	gptClient := openai.NewClient("authToken")
 
 	// xgpt3 client
 	xgpt3Client := xgpt3.NewClient(gptClient, handler)
 
 	// 请求
-	req := gogpt.CompletionRequest{
-		Model:           gogpt.GPT3TextDavinci003,
+	req := openai.CompletionRequest{
+		Model:           openai.GPT3TextDavinci003,
 		MaxTokens:       100,
 		Prompt:          "Lorem ipsum",
 		TopP:            1,
