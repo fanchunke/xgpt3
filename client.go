@@ -39,6 +39,11 @@ func (c *Client) WithMaxTurn(n int) *Client {
 	return c
 }
 
+func (c *Client) WithMaxCtxLength(n int) *Client {
+	c.maxCtxLength = n
+	return c
+}
+
 func (c *Client) WithLogger(l zerolog.Logger) *Client {
 	c.logger = l
 	return c
