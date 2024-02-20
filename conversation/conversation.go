@@ -45,7 +45,7 @@ type Handler interface {
 	// 获取最近一次开启的会话
 	GetLatestActiveSession(ctx context.Context, userId string) (*Session, error)
 	// 创建消息
-	CreateMessage(ctx context.Context, session *Session, fromUserId, toUserId, content string) (*Message, error)
+	CreateMessage(ctx context.Context, session *Session, fromUserId, toUserId string, content string) (*Message, error)
 	// 创建配对消息
 	CreateSpouseMessage(ctx context.Context, session *Session, fromUserId, toUserId, content string, spouse *Message) (*Message, error)
 	// 获取会话内最近的消息列表

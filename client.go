@@ -95,20 +95,30 @@ func (c *Client) preCompletion(ctx context.Context, request *openai.CompletionRe
 	newPrompt := c.buildSessionQuery(ctx, session, request)
 
 	// 保存用户消息
-	msg, err := c.ch.CreateMessage(ctx, session, request.User, channel, request.Prompt)
+	msg, err := c.ch.CreateMessage(ctx, session, request.User, channel, convertCompletionPrompt(request.Prompt))
 	if err != nil {
 		return session, nil, fmt.Errorf("create message failed: %w", err)
 	}
 
 	request.Prompt = newPrompt
-	c.logger.Debug().Msgf("Requested %d tokens (%d in your prompt; %d for the completion)", len(request.Prompt)+request.MaxTokens, len(request.Prompt), request.MaxTokens)
+	prompt := convertCompletionPrompt(request.Prompt)
+	c.logger.Debug().Msgf("Requested %d tokens (%d in your prompt; %d for the completion)", len(prompt)+request.MaxTokens, len(prompt), request.MaxTokens)
 	return session, msg, nil
 }
 
-func (c *Client) buildSessionQuery(ctx context.Context, session *conversation.Session, request *openai.CompletionRequest) string {
-	if len(request.Prompt)+request.MaxTokens > c.maxCtxLength {
-		c.logger.Debug().Msgf("Requested %d tokens (%d in your prompt; %d for the completion), reduce prompt", len(request.Prompt)+request.MaxTokens, len(request.Prompt), request.MaxTokens)
-		return string([]rune(request.Prompt)[:c.maxCtxLength-request.MaxTokens])
+func convertCompletionPrompt(prompt any) string {
+	promptContent, ok := prompt.(string)
+	if ok {
+		return promptContent
+	}
+	return ""
+}
+
+func (c *Client) buildSessionQuery(ctx context.Context, session *conversation.Session, request *openai.CompletionRequest) any {
+	prompt := convertCompletionPrompt(request.Prompt)
+	if len(prompt)+request.MaxTokens > c.maxCtxLength {
+		c.logger.Debug().Msgf("Requested %d tokens (%d in your prompt; %d for the completion), reduce prompt", len(prompt)+request.MaxTokens, len(prompt), request.MaxTokens)
+		return string([]rune(prompt)[:c.maxCtxLength-request.MaxTokens])
 	}
 
 	msgs, err := c.ch.ListLatestMessagesWithSpouse(ctx, session, request.User, c.maxTurn)

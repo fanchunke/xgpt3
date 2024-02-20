@@ -6,7 +6,7 @@ require (
 	entgo.io/ent v0.11.8
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/rs/zerolog v1.29.0
-	github.com/sashabaranov/go-openai v1.4.1
+	github.com/sashabaranov/go-openai v1.19.4
 )
 
 require (
